@@ -17,7 +17,6 @@
     "dev:ui": "cross-env NODE_ENV=development dotenv -e .env.local -- eve dev --port 2000",
     "ngrok": "ngrok http 2000",
     "start": "cross-env NODE_ENV=production eve start",
-    "preview": "node .output/server/index.mjs",
     "typecheck": "tsc",
     "format": "prettier --write \"**/*.{ts,json,md}\" --ignore-path .gitignore",
     "format:check": "prettier --check \"**/*.{ts,json,md}\" --ignore-path .gitignore",

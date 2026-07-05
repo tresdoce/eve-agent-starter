@@ -60,18 +60,17 @@ eve info   # confirma que Eve descubrió tools, skill, canal e instrucciones
 
 ### Scripts disponibles
 
-| Script           | Descripción                                                                                      |
-| ---------------- | ------------------------------------------------------------------------------------------------ |
-| `pnpm dev`       | Servidor de desarrollo en el puerto 2000                                                         |
-| `pnpm dev:ui`    | Igual, con la TUI interactiva de Eve                                                             |
-| `pnpm build`     | Build de producción                                                                              |
-| `pnpm start`     | Corre el build de producción con `eve start`                                                     |
-| `pnpm preview`   | Corre el build ya compilado directo (`node .output/server/index.mjs`), sin pasar por `eve start` |
-| `pnpm clean`     | Borra todo lo generado (`.eve`, `.output`, `data`, etc.)                                         |
-| `pnpm lint`      | oxlint                                                                                           |
-| `pnpm format`    | Prettier                                                                                         |
-| `pnpm typecheck` | TypeScript                                                                                       |
-| `pnpm test`      | Vitest                                                                                           |
+| Script           | Descripción                                              |
+| ---------------- | -------------------------------------------------------- |
+| `pnpm dev`       | Servidor de desarrollo en el puerto 2000                 |
+| `pnpm dev:ui`    | Igual, con la TUI interactiva de Eve                     |
+| `pnpm build`     | Build de producción                                      |
+| `pnpm start`     | Corre el build de producción con `eve start`             |
+| `pnpm clean`     | Borra todo lo generado (`.eve`, `.output`, `data`, etc.) |
+| `pnpm lint`      | oxlint                                                   |
+| `pnpm format`    | Prettier                                                 |
+| `pnpm typecheck` | TypeScript                                               |
+| `pnpm test`      | Vitest                                                   |
 
 ---
 
