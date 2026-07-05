@@ -174,3 +174,9 @@ Cubre: carga de la base de conocimiento, validación de schema, y filtros del re
 | `knowledge-base/faqs.json` local   | No escala ni se edita desde un panel       | CMS o base de datos detrás de `FaqRepository`   |
 | `data/tickets.json` en disco       | No escala a múltiples instancias           | Sistema de tickets real (Zendesk, Linear, etc.) |
 | Sin autenticación real en el canal | `placeholderAuth()` no sirve en producción | Auth.js, Clerk, o tu propio proveedor           |
+
+---
+
+## Deploy
+
+Ver [`DEPLOY.md`](./DEPLOY.md) para la guía de deploy en Railway.
