@@ -89,7 +89,29 @@ O simplemente `git push` si ya conectaste el servicio al repo de GitHub.
 railway domain
 ```
 
-### 5. Verificar
+### 5. Configurar el healthcheck
+
+No queda seteado por default. Sin esto, Railway marca un deploy como exitoso apenas el contenedor arranca,
+aunque la app esté crasheando en loop (nos pasó: un deploy quedó en "SUCCESS" mientras el proceso reiniciaba
+sin parar por el bug de `just-bash`). `GET /eve/v1/health` es público y no pasa por el auth walk, así que es
+el path correcto:
+
+El CLI de esta versión no expone un flag directo para esto — se setea vía la API de GraphQL (mismo
+patrón que `scripts/railway-api.sh` de la skill de Railway):
+
+```bash
+# healthcheckPath: "/eve/v1/health", healthcheckTimeout: 30 (segundos)
+# mutation serviceInstanceUpdate(environmentId, serviceId, input: { healthcheckPath, healthcheckTimeout })
+```
+
+Verificalo contra el servicio (no contra `railway status --json`, que puede mostrar un snapshot viejo del
+build):
+
+```bash
+railway redeploy --yes   # para que el próximo rollout ya lo valide
+```
+
+### 6. Verificar
 
 ```bash
 railway logs --build   # logs del build más reciente
@@ -97,6 +119,22 @@ railway logs           # logs de runtime
 curl https://<tu-dominio>.up.railway.app/eve/v1/health
 # {"ok":true,"status":"ready",...}
 ```
+
+---
+
+## Networking
+
+Este template usa un único servicio, sin base de datos ni servicios internos — no hay networking privado
+que configurar.
+
+- **Dominio público**: uno solo, generado por `railway domain` (`*.up.railway.app`). Alcanza para este caso
+  de uso; agregá un dominio custom con `railway domain tu-dominio.com` si hace falta.
+- **Puerto**: `eve start` escucha en `$PORT`, que Railway inyecta automáticamente (`PORT=2000` en las
+  variables del servicio). No hace falta fijar `--port` a mano ni exponer otro puerto.
+- **`RAILWAY_PRIVATE_DOMAIN`**: existe siempre (DNS interno), pero no lo usamos — solo importa si en algún
+  momento este agente necesita hablarle a otro servicio del mismo proyecto (una base de datos, otro backend).
+- **Réplicas**: 1 sola (`numReplicas: 1`). Si escalás a más de una, recordá el límite ya documentado en
+  "Persistencia" — `data/tickets.json` no se comparte entre réplicas.
 
 ---
 
