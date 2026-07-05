@@ -13,6 +13,7 @@ const parsed = schema.parse(env);
 
 export interface AppConfig {
   appStage: AppStage;
+  isProd: boolean;
   openai: {
     apiKey: string;
   };
@@ -20,11 +21,12 @@ export interface AppConfig {
 
 export const config: AppConfig = {
   appStage: parsed.APP_STAGE,
+  isProd: parsed.APP_STAGE === "production",
   openai: {
     apiKey: parsed.OPENAI_API_KEY,
   },
 };
 
-// Comparé contra config.appStage donde haga falta (ej: config.appStage === "production").
+// Para cualquier otro stage, comparé contra config.appStage directamente.
 // Agregá tus propias variables tipadas acá a medida que las necesites
 // (base de datos, servicios externos, feature flags, etc.).
