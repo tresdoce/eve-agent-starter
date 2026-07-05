@@ -86,7 +86,7 @@ agent/
 ├── skills/
 │   └── tone_and_escalation.md   # Skill cargada on-demand
 └── channels/
-    └── eve.ts                   # Canal HTTP por defecto (auth localDev/vercelOidc/placeholder)
+    └── eve.ts                   # Canal HTTP por defecto (auth localDev/httpBasic)
 
 src/
 ├── domain/
@@ -169,11 +169,11 @@ Cubre: carga de la base de conocimiento, validación de schema, y filtros del re
 
 ## Limitaciones del ejemplo
 
-| Limitación                         | Impacto                                    | Solución para producción                        |
-| ---------------------------------- | ------------------------------------------ | ----------------------------------------------- |
-| `knowledge-base/faqs.json` local   | No escala ni se edita desde un panel       | CMS o base de datos detrás de `FaqRepository`   |
-| `data/tickets.json` en disco       | No escala a múltiples instancias           | Sistema de tickets real (Zendesk, Linear, etc.) |
-| Sin autenticación real en el canal | `placeholderAuth()` no sirve en producción | Auth.js, Clerk, o tu propio proveedor           |
+| Limitación                       | Impacto                                       | Solución para producción                                                   |
+| -------------------------------- | --------------------------------------------- | -------------------------------------------------------------------------- |
+| `knowledge-base/faqs.json` local | No escala ni se edita desde un panel          | CMS o base de datos detrás de `FaqRepository`                              |
+| `data/tickets.json` en disco     | No escala a múltiples instancias              | Sistema de tickets real (Zendesk, Linear, etc.)                            |
+| Auth compartida (`httpBasic()`)  | Un solo usuario/servicio, sin sesiones reales | Tu propio `AuthFn` (sesión de app, JWT, OIDC) si hay frontend multiusuario |
 
 ---
 
