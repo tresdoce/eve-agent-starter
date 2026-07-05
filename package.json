@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Template base para agentes con Vercel Eve, con un ejemplo funcional de soporte por FAQ.",
   "type": "module",
+  "packageManager": "pnpm@11.9.0",
   "imports": {
     "#*": "./agent/*",
     "#evals/*": "./evals/*"
