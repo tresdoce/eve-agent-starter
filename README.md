@@ -132,11 +132,9 @@ data/                              # Gitignorado — generado en runtime (ticket
 
 Copiá `.env.example` a `.env.local` y completá:
 
-| Variable                 | Descripción           |
-| ------------------------ | --------------------- |
-| `OPENAI_API_KEY`         | API key de OpenAI     |
-| `OPENAI_ORGANIZATION_ID` | Org ID (opcional)     |
-| `OPENAI_PROJECT_ID`      | Project ID (opcional) |
+| Variable         | Descripción       |
+| ---------------- | ----------------- |
+| `OPENAI_API_KEY` | API key de OpenAI |
 
 ---
 

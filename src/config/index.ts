@@ -7,8 +7,6 @@ const schema = z.object({
   NODE_ENV: z.string().default("local"),
   APP_STAGE: z.enum(["local", "test", "develop", "qa", "homo", "production"]).default("local"),
   OPENAI_API_KEY: z.string().min(1),
-  OPENAI_ORGANIZATION_ID: z.string().optional(),
-  OPENAI_PROJECT_ID: z.string().optional(),
 });
 
 const parsed = schema.parse(env);
@@ -20,8 +18,6 @@ export interface AppConfig {
   isTest: boolean;
   openai: {
     apiKey: string;
-    organizationId?: string;
-    projectId?: string;
   };
 }
 
@@ -32,8 +28,6 @@ export const config: AppConfig = {
   isTest: parsed.APP_STAGE === "test",
   openai: {
     apiKey: parsed.OPENAI_API_KEY,
-    organizationId: parsed.OPENAI_ORGANIZATION_ID,
-    projectId: parsed.OPENAI_PROJECT_ID,
   },
 };
 
