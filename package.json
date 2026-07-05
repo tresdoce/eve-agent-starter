@@ -9,7 +9,6 @@
     "#evals/*": "./evals/*"
   },
   "scripts": {
-    "prepare": "husky",
     "clean": "rimraf .eve .output .workflow-data node_modules pnpm-lock.yaml package-lock.json data",
     "prebuild": "rimraf .eve .output .workflow-data data",
     "build": "cross-env NODE_ENV=production eve build",
@@ -18,13 +17,14 @@
     "dev:ui": "cross-env NODE_ENV=development dotenv -e .env.local -- eve dev --port 2000",
     "ngrok": "ngrok http 2000",
     "start": "cross-env NODE_ENV=production eve start",
-    "preview": "npx nitro preview",
+    "preview": "node .output/server/index.mjs",
     "typecheck": "tsc",
     "format": "prettier --write \"**/*.{ts,json,md}\" --ignore-path .gitignore",
     "format:check": "prettier --check \"**/*.{ts,json,md}\" --ignore-path .gitignore",
     "lint": "oxlint .",
     "test": "cross-env NODE_ENV=test dotenv -e .env.test -- vitest run",
-    "test:watch": "cross-env NODE_ENV=test dotenv -e .env.test -- vitest"
+    "test:watch": "cross-env NODE_ENV=test dotenv -e .env.test -- vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.7",
