@@ -4,7 +4,7 @@ import { env } from "./env.js";
 export type AppStage = "local" | "test" | "develop" | "qa" | "homo" | "production";
 
 const schema = z.object({
-  NODE_ENV: z.string().default("local"),
+  NODE_ENV: z.string().default("development"),
   APP_STAGE: z.enum(["local", "test", "develop", "qa", "homo", "production"]).default("local"),
   OPENAI_API_KEY: z.string().min(1),
 });

@@ -404,20 +404,21 @@ En producción Eve no carga ningún archivo — el host inyecta las vars directa
 
 ### Convención de entornos con `NODE_ENV`
 
-`NODE_ENV` usa tres valores:
+`NODE_ENV` usa tres valores, seteados por `cross-env` directamente en los scripts de `package.json`
+(no en los archivos `.env*`):
 
-| `NODE_ENV`   | Cuándo se usa                                       | Cómo se carga                          |
-| ------------ | --------------------------------------------------- | -------------------------------------- |
-| `local`      | Desarrollo local (`pnpm dev`)                       | `.env` cargado por Eve automáticamente |
-| `test`       | Correr tests — local o CI/CD (`pnpm test`)          | Seteado por el test runner (Vitest)    |
-| `production` | Cualquier entorno desplegado (QA, homo, prod, etc.) | Vars inyectadas por la plataforma      |
+| `NODE_ENV`    | Cuándo se usa                                       | Cómo se setea                                      |
+| ------------- | --------------------------------------------------- | -------------------------------------------------- |
+| `development` | Desarrollo local (`pnpm dev`, `pnpm dev:ui`)        | `cross-env NODE_ENV=development` en el script      |
+| `test`        | Correr tests — local o CI/CD (`pnpm test`)          | `cross-env NODE_ENV=test` en `test`/`test:watch`   |
+| `production`  | Cualquier entorno desplegado (QA, homo, prod, etc.) | `cross-env NODE_ENV=production` en `build`/`start` |
 
 Todos los entornos desplegados usan `NODE_ENV=production`. Si hace falta distinguir QA de prod dentro de la plataforma, se agrega una variable adicional (ej: `APP_STAGE=qa`) directamente en el dashboard — sin necesidad de archivos extra.
 
 ### Archivos de entorno
 
 ```
-.env          ← valores del desarrollador local, NODE_ENV=local (gitignored)
+.env          ← valores del desarrollador local, sin NODE_ENV (gitignored)
 .env.example  ← template commiteado, sin secretos
 ```
 
