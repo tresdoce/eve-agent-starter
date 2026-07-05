@@ -2,5 +2,7 @@ packages:
   - "."
 
 allowBuilds:
+  '@mongodb-js/zstd': true
   esbuild: true
   ngrok: true
+  node-liblzma: true
