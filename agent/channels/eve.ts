@@ -1,5 +1,6 @@
 import { eveChannel } from "eve/channels/eve";
 import { httpBasic, localDev } from "eve/channels/auth";
+import { config } from "../../src/config/index.js";
 
 export default eveChannel({
   auth: [
@@ -9,8 +10,8 @@ export default eveChannel({
     // credentials. Swap for your own user/session auth if this agent gets
     // a real multi-user frontend.
     httpBasic({
-      username: process.env.ROUTE_AUTH_BASIC_USERNAME ?? "",
-      password: process.env.ROUTE_AUTH_BASIC_PASSWORD ?? "",
+      username: config.routeAuth.username,
+      password: config.routeAuth.password,
     }),
   ],
 });

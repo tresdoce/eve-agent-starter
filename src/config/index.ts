@@ -8,6 +8,8 @@ const schema = z.object({
   APP_STAGE: z.enum(["local", "test", "develop", "qa", "homo", "production"]).default("local"),
   OPENAI_API_KEY: z.string().min(1),
   OPENAI_MODEL: z.string().default("gpt-4o"),
+  ROUTE_AUTH_BASIC_USERNAME: z.string().default(""),
+  ROUTE_AUTH_BASIC_PASSWORD: z.string().default(""),
 });
 
 const parsed = schema.parse(env);
@@ -19,6 +21,10 @@ export interface AppConfig {
     apiKey: string;
     model: string;
   };
+  routeAuth: {
+    username: string;
+    password: string;
+  };
 }
 
 export const config: AppConfig = {
@@ -27,6 +33,10 @@ export const config: AppConfig = {
   openai: {
     apiKey: parsed.OPENAI_API_KEY,
     model: parsed.OPENAI_MODEL,
+  },
+  routeAuth: {
+    username: parsed.ROUTE_AUTH_BASIC_USERNAME,
+    password: parsed.ROUTE_AUTH_BASIC_PASSWORD,
   },
 };
 
