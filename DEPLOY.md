@@ -63,7 +63,6 @@ documentado en `EVE.md` para cualquier entorno desplegado).
 
 ```bash
 railway variables --set "RAILPACK_NODE_VERSION=24"
-railway variables --set "NODE_ENV=production"
 railway variables --set "APP_STAGE=production"
 railway variables --set "OPENAI_API_KEY=sk-..."
 railway variables --set "OPENAI_MODEL=gpt-4o"                # opcional, mismo default
@@ -72,17 +71,28 @@ railway variables --set "ROUTE_AUTH_BASIC_USERNAME=eve-agent"
 railway variables --set 'ROUTE_AUTH_BASIC_PASSWORD=${{ secret(32, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") }}'
 ```
 
+No hace falta setear `NODE_ENV` acá: `package.json` ya lo fuerza con `cross-env NODE_ENV=production` en
+`build`/`start`, así que una variable de Railway con el mismo nombre solo quedaría redundante (nunca gana,
+el script siempre lo pisa).
+
 `RAILPACK_NODE_VERSION=24` es obligatorio: Railpack por default resuelve Node 22, pero Eve requiere Node
 ≥24. Sin esto, `eve build` falla con `eve requires Node.js >=24. You are running v22.x.x`.
 
 `${{ secret(length, charset) }}` es la función nativa de Railway para generar secretos — evitá pegar una
-password generada por vos en texto plano en el historial de la terminal. Ojo con un detalle: **`railway
-variables --kv` re-evalúa la expresión en cada consulta** (te muestra un valor distinto cada vez que la
-corrés), no el valor real ya fijado en el deployment. Para ver el valor real inyectado:
+password generada por vos en texto plano en el historial de la terminal. Dos gotchas reales que
+encontramos probando esto:
 
-```bash
-railway ssh -- printenv ROUTE_AUTH_BASIC_PASSWORD
-```
+- **`railway variables --kv` re-evalúa la expresión en cada consulta** (te muestra un valor distinto cada
+  vez que la corrés) — no es el valor real ya fijado en el deployment. Para ver el valor real inyectado:
+
+  ```bash
+  railway ssh -- printenv ROUTE_AUTH_BASIC_PASSWORD
+  ```
+
+- **Cada redeploy regenera el secreto.** No es un valor fijo que persiste entre deploys — cualquier
+  redeploy (push de código, cambio de otra variable, `railway redeploy`) hace que Railway resuelva
+  `secret(...)` de nuevo, con un valor distinto. Si algo consume esta password fuera de Railway
+  (un cliente externo, un script), volvé a leerla con `railway ssh` después de cada redeploy.
 
 ### 3. Deploy
 
