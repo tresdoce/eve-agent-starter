@@ -66,6 +66,8 @@ railway variables --set "RAILPACK_NODE_VERSION=24"
 railway variables --set "NODE_ENV=production"
 railway variables --set "APP_STAGE=production"
 railway variables --set "OPENAI_API_KEY=sk-..."
+railway variables --set "OPENAI_MODEL=gpt-4o"                # opcional, mismo default
+railway variables --set "OPENAI_REASONING_EFFORT=medium"     # opcional, sin setear usa el default de Eve
 railway variables --set "ROUTE_AUTH_BASIC_USERNAME=eve-agent"
 railway variables --set "ROUTE_AUTH_BASIC_PASSWORD=$(openssl rand -base64 24 | tr -d '/+=' | head -c 32)"
 ```

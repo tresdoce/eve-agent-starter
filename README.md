@@ -78,7 +78,7 @@ eve info   # confirma que Eve descubrió tools, skill, canal e instrucciones
 
 ```
 agent/
-├── agent.ts                    # defineAgent({ model })
+├── agent.ts                    # defineAgent({ model, reasoning }) — lee config.openai
 ├── instructions.md             # System prompt del ejemplo (Acme support)
 ├── tools/
 │   ├── search_faq.ts            # Busca en la FAQ por texto y/o categoría
@@ -97,8 +97,8 @@ src/
 ├── lib/
 │   └── normalize.ts              # normalizeText() para búsqueda case/accent-insensitive
 └── config/
-    ├── env.ts                    # Variables de entorno tipadas
-    └── index.ts                  # AppConfig validado con Zod
+    ├── env.ts                    # Lee process.env crudo (sin validar)
+    └── index.ts                  # AppConfig: valida con Zod y expone `config`
 
 knowledge-base/
 └── faqs.json                     # Datos de ejemplo, validados con Zod al iniciar
@@ -123,19 +123,34 @@ data/                              # Gitignorado — generado en runtime (ticket
 5. **Agregá un canal** si necesitás algo más que HTTP genérico (WhatsApp, Slack, Telegram, etc.):
    `eve channels add`. El canal por defecto (`agent/channels/eve.ts`) alcanza para empezar.
 6. **Variables de entorno**: agregá las tuyas a `src/config/env.ts` + `src/config/index.ts`
-   (mismo patrón que `OPENAI_*`), y a `.env.example`.
+   (mismo patrón que `OPENAI_*`), y a `.env.example`. Consumilas siempre desde `config`, no leas
+   `process.env` directo en `agent/` — ver la sección "Configuración" más abajo.
 7. **Tests**: seguí el patrón de `tests/faqRepository.test.ts` para tu propia capa de datos.
 
 ---
 
 ## Configuración
 
+Las variables de entorno se tipan y validan en un solo lugar: `src/config/`.
+
+- **`src/config/env.ts`**: lee las vars crudas de `process.env` (sin validar).
+- **`src/config/index.ts`**: las valida con Zod (`schema.parse(env)`) y expone un objeto `config` tipado.
+- `agent/agent.ts` y `agent/channels/eve.ts` importan `config` — **nunca `process.env` directo**. Si
+  agregás una variable nueva, sumala en esos dos archivos de `src/config/` y consumila desde `config`.
+
 Copiá `.env.example` a `.env.local` y completá:
 
-| Variable         | Descripción                                    |
-| ---------------- | ---------------------------------------------- |
-| `OPENAI_API_KEY` | API key de OpenAI                              |
-| `OPENAI_MODEL`   | Opcional — default `gpt-4o` (`agent/agent.ts`) |
+| Variable                    | Descripción                                                                                         |
+| --------------------------- | --------------------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`            | API key de OpenAI (requerida)                                                                       |
+| `OPENAI_MODEL`              | Opcional — default `gpt-4o`                                                                         |
+| `OPENAI_REASONING_EFFORT`   | Opcional — `none`, `minimal`, `low`, `medium`, `high` o `xhigh`; sin setear usa el default de Eve   |
+| `ROUTE_AUTH_BASIC_USERNAME` | Credenciales de `httpBasic()` en producción — no hace falta en local (`localDev()` ya abre el paso) |
+| `ROUTE_AUTH_BASIC_PASSWORD` | Ídem                                                                                                |
+| `APP_STAGE`                 | `local`, `test`, `develop`, `qa`, `homo` o `production` — identifica el entorno corriendo           |
+
+`NODE_ENV` no va en `.env*` — lo setea `cross-env` directo en los scripts de `package.json`
+(`development` / `test` / `production` según el script; ver `EVE.md`).
 
 ---
 

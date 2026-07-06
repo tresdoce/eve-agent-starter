@@ -4,4 +4,5 @@ import { config } from "../src/config/index.js";
 
 export default defineAgent({
   model: openai(config.openai.model),
+  ...(config.openai.reasoningEffort ? { reasoning: config.openai.reasoningEffort } : {}),
 });

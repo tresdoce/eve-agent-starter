@@ -3,11 +3,23 @@ import { env } from "./env.js";
 
 export type AppStage = "local" | "test" | "develop" | "qa" | "homo" | "production";
 
+const reasoningEfforts = [
+  "provider-default",
+  "none",
+  "minimal",
+  "low",
+  "medium",
+  "high",
+  "xhigh",
+] as const;
+export type ReasoningEffort = (typeof reasoningEfforts)[number];
+
 const schema = z.object({
   NODE_ENV: z.string().default("development"),
   APP_STAGE: z.enum(["local", "test", "develop", "qa", "homo", "production"]).default("local"),
   OPENAI_API_KEY: z.string().min(1),
   OPENAI_MODEL: z.string().default("gpt-4o"),
+  OPENAI_REASONING_EFFORT: z.enum(reasoningEfforts).optional(),
   ROUTE_AUTH_BASIC_USERNAME: z.string().default(""),
   ROUTE_AUTH_BASIC_PASSWORD: z.string().default(""),
 });
@@ -20,6 +32,7 @@ export interface AppConfig {
   openai: {
     apiKey: string;
     model: string;
+    reasoningEffort?: ReasoningEffort;
   };
   routeAuth: {
     username: string;
@@ -33,6 +46,7 @@ export const config: AppConfig = {
   openai: {
     apiKey: parsed.OPENAI_API_KEY,
     model: parsed.OPENAI_MODEL,
+    reasoningEffort: parsed.OPENAI_REASONING_EFFORT,
   },
   routeAuth: {
     username: parsed.ROUTE_AUTH_BASIC_USERNAME,
