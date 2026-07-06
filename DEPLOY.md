@@ -69,11 +69,20 @@ railway variables --set "OPENAI_API_KEY=sk-..."
 railway variables --set "OPENAI_MODEL=gpt-4o"                # opcional, mismo default
 railway variables --set "OPENAI_REASONING_EFFORT=medium"     # opcional, sin setear usa el default de Eve
 railway variables --set "ROUTE_AUTH_BASIC_USERNAME=eve-agent"
-railway variables --set "ROUTE_AUTH_BASIC_PASSWORD=$(openssl rand -base64 24 | tr -d '/+=' | head -c 32)"
+railway variables --set 'ROUTE_AUTH_BASIC_PASSWORD=${{ secret(32, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") }}'
 ```
 
 `RAILPACK_NODE_VERSION=24` es obligatorio: Railpack por default resuelve Node 22, pero Eve requiere Node
 ≥24. Sin esto, `eve build` falla con `eve requires Node.js >=24. You are running v22.x.x`.
+
+`${{ secret(length, charset) }}` es la función nativa de Railway para generar secretos — evitá pegar una
+password generada por vos en texto plano en el historial de la terminal. Ojo con un detalle: **`railway
+variables --kv` re-evalúa la expresión en cada consulta** (te muestra un valor distinto cada vez que la
+corrés), no el valor real ya fijado en el deployment. Para ver el valor real inyectado:
+
+```bash
+railway ssh -- printenv ROUTE_AUTH_BASIC_PASSWORD
+```
 
 ### 3. Deploy
 
