@@ -1,6 +1,7 @@
 import { openai } from "@ai-sdk/openai";
 import { defineAgent } from "eve";
+import { config } from "../src/config/index.js";
 
 export default defineAgent({
-  model: openai("gpt-4o"),
+  model: openai(config.openai.model),
 });

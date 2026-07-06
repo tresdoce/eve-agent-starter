@@ -7,6 +7,7 @@ const schema = z.object({
   NODE_ENV: z.string().default("development"),
   APP_STAGE: z.enum(["local", "test", "develop", "qa", "homo", "production"]).default("local"),
   OPENAI_API_KEY: z.string().min(1),
+  OPENAI_MODEL: z.string().default("gpt-4o"),
 });
 
 const parsed = schema.parse(env);
@@ -16,6 +17,7 @@ export interface AppConfig {
   isProd: boolean;
   openai: {
     apiKey: string;
+    model: string;
   };
 }
 
@@ -24,6 +26,7 @@ export const config: AppConfig = {
   isProd: parsed.APP_STAGE === "production",
   openai: {
     apiKey: parsed.OPENAI_API_KEY,
+    model: parsed.OPENAI_MODEL,
   },
 };
 
