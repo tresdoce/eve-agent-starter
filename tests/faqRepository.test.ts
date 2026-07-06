@@ -37,8 +37,14 @@ describe("LocalFaqRepository", () => {
     expect(results.length).toBeGreaterThan(0);
   });
 
+  it("encuentra la entrada aunque la query use otra conjugación", async () => {
+    // faq-002 pregunta "¿Cómo actualizo...?" — la query usa el infinitivo "actualizar"
+    const results = await repo.search({ query: "actualizar método de pago" });
+    expect(results.some((e) => e.id === "faq-002")).toBe(true);
+  });
+
   it("devuelve vacío cuando no hay coincidencias", async () => {
-    const results = await repo.search({ query: "algo-que-no-existe-en-la-faq" });
+    const results = await repo.search({ query: "asdfgh-qwerty-zxcvbn" });
     expect(results).toHaveLength(0);
   });
 

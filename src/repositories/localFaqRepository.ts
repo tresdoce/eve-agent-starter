@@ -7,6 +7,36 @@ import { normalizeText } from "../lib/normalize.js";
 
 const KnowledgeBaseSchema = z.array(FaqEntrySchema);
 
+const STOPWORDS = new Set([
+  "de",
+  "la",
+  "el",
+  "los",
+  "las",
+  "mi",
+  "tu",
+  "su",
+  "un",
+  "una",
+  "que",
+  "como",
+  "para",
+  "por",
+  "en",
+  "es",
+  "y",
+  "o",
+  "a",
+  "al",
+  "no",
+]);
+
+function significantWords(text: string): string[] {
+  return normalizeText(text)
+    .split(" ")
+    .filter((word) => word.length > 2 && !STOPWORDS.has(word));
+}
+
 function loadKnowledgeBase(): FaqEntry[] {
   const path = resolve(process.cwd(), "knowledge-base/faqs.json");
   const raw = readFileSync(path, "utf-8");
@@ -33,9 +63,11 @@ export class LocalFaqRepository implements FaqRepository {
       if (filters.category && e.category !== filters.category) return false;
 
       if (filters.query) {
-        const q = normalizeText(filters.query);
+        const queryWords = significantWords(filters.query);
         const haystack = normalizeText([e.question, e.answer, ...e.keywords].join(" "));
-        if (!haystack.includes(q)) return false;
+        if (queryWords.length > 0 && !queryWords.some((word) => haystack.includes(word))) {
+          return false;
+        }
       }
 
       return true;
